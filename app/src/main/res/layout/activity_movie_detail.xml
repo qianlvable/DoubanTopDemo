@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lvable.ningjiaqi.doubanrx.movieDetail.MovieDetailActivity">
+    <ImageView
+        tools:src="@drawable/cover_test"
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_main_poster"
+        android:layout_width="match_parent"
+        android:layout_height="360dp" />
+    <LinearLayout
+        android:id="@+id/info_panel"
+        android:layout_below="@id/iv_main_poster"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:background="#5f767d"
+            android:text="This is title"
+            android:textColor="#fafafa"
+            android:paddingLeft="18dp"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+        <TextView
+            android:textColor="#fafafa"
+            android:textSize="16sp"
+            android:lineSpacingExtra="3dp"
+            android:padding="18dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum libero eget turpis imperdiet lobortis. Proin blandit, libero nec eleifend euismod, quam urna tempor ipsum, in facilisis neque nisl pretium odio. Etiam molestie velit accumsan, vestibulum mi nec, ultricies nibh. Donec dui eros, tristique vitae massa nec, iaculis consectetur libero. Donec commodo aliquet vulputate. Sed ac tincidunt quam. Integer pulvinar ante hendrerit dui fermentum elementum. Suspendisse ultricies diam ac velit pellentesque iaculis. Nam varius facilisis arcu, at cursus erat hendrerit ut. Aliquam lacus justo, dictum nec erat vitae, suscipit egestas urna.
+
+"
+            android:background="#2e383f"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</RelativeLayout>
