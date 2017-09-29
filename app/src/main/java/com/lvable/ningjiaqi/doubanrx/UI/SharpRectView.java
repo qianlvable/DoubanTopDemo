@@ -13,6 +13,11 @@ import android.view.View;
  * Created by Jiaqi Ning on 28/4/2015.
  */
 public class SharpRectView extends View {
+    public final int TOP_LEFT = 0;
+    public final int TOP_RIGHT = 1;
+    public final int BOTTOM_LEFT = 2;
+    public final int BOTTTOM_RIGHT = 3;
+    private int mStyle;
     private Paint mPaint;
     private Path mPath;
     public SharpRectView(Context context) {

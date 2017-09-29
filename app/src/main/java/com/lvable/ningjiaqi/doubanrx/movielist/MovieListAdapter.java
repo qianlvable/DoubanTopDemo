@@ -2,6 +2,8 @@ package com.lvable.ningjiaqi.doubanrx.movielist;
 
 
 import android.content.Context;
+import android.content.pm.ProviderInfo;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.lvable.ningjiaqi.doubanrx.R;
 import com.lvable.ningjiaqi.doubanrx.UI.PolyLoadingView;
 import com.lvable.ningjiaqi.doubanrx.data.Movie;
@@ -26,6 +28,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
 
+    public static final int STATUS_ERROR = 1;
+    public static final int STATUS_LOADING = 2;
+    public static final int STATUS_NO_MORE = 3;
+    private int mFooterStatus = 2;
     private List<Movie> mData;
     private OnItemClickListener mOnClickListener;
     private Context mContext;
@@ -78,14 +84,30 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             vh.mOrder.setText("No." + (i + 1));
             vh.mRatingBar.setRating(mData.get(i).rating * 0.5f);
             vh.mTitle.setText(mData.get(i).title);
-            Glide.with(mContext).load(mData.get(i).imgUrl)
-                    .crossFade()
-                    .centerCrop()
-//                .transform(new TopCrop(mContext))
-                    .into(vh.mIvPoster);
+
+            vh.mIvPoster.setImageURI(Uri.parse(mData.get(i).imgUrl));
+            // TODO: 16/4/29 add load image
         } else {
             FooterViewHolder vh = (FooterViewHolder) viewHolder;
-            vh.mLoadingView.startLoading();
+            switch (mFooterStatus){
+                case STATUS_LOADING:
+                    vh.mLoadingFooter.setVisibility(View.VISIBLE);
+                    vh.mNoMoreFooter.setVisibility(View.INVISIBLE);
+                    vh.mErrorFooter.setVisibility(View.INVISIBLE);
+                    vh.mLoadingView.startLoading();
+                    break;
+                case STATUS_ERROR:
+                    vh.mLoadingView.stopLoading();
+                    vh.mErrorFooter.setVisibility(View.VISIBLE);
+                    vh.mNoMoreFooter.setVisibility(View.INVISIBLE);
+                    vh.mLoadingFooter.setVisibility(View.INVISIBLE);
+                    break;
+                case STATUS_NO_MORE:
+                    vh.mErrorFooter.setVisibility(View.INVISIBLE);
+                    vh.mNoMoreFooter.setVisibility(View.VISIBLE);
+                    vh.mLoadingFooter.setVisibility(View.INVISIBLE);
+                    break;
+            }
         }
 
     }
@@ -101,13 +123,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView mDirector;
         TextView mOrder;
         RatingBar mRatingBar;
-        ImageView mIvPoster;
+        SimpleDraweeView mIvPoster;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
 
             mRoot = itemView.findViewById(R.id.root);
-            mIvPoster = (ImageView) itemView.findViewById(R.id.iv_movie_poster);
+            mIvPoster = (SimpleDraweeView) itemView.findViewById(R.id.iv_movie_poster);
             mTitle = (TextView) itemView.findViewById(R.id.tv_title);
             mDirector = (TextView) itemView.findViewById(R.id.tv_director);
             mOrder = (TextView) itemView.findViewById(R.id.tv_order);
@@ -117,15 +139,26 @@ public class MovieListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public class FooterViewHolder extends RecyclerView.ViewHolder {
         PolyLoadingView mLoadingView;
+        View mLoadingFooter;
+        View mErrorFooter;
+        View mNoMoreFooter;
 
         public FooterViewHolder(View itemView) {
             super(itemView);
             mLoadingView = (PolyLoadingView) itemView.findViewById(R.id.poly_loading);
+            mLoadingFooter = itemView.findViewById(R.id.loading_footer);
+            mErrorFooter = itemView.findViewById(R.id.error_footer);
+            mNoMoreFooter = itemView.findViewById(R.id.no_more_footer);
         }
     }
 
     public void setOnClickListener(OnItemClickListener mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
+    }
+
+    public void setFooterStatus(int status) {
+        this.mFooterStatus = status;
+        notifyDataSetChanged();
     }
 }
 

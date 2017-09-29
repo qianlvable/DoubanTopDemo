@@ -31,6 +31,6 @@ public interface MovieListContract {
 
         void getNextPage();
 
-
+        int getCurrentRequestPos();
     }
 }

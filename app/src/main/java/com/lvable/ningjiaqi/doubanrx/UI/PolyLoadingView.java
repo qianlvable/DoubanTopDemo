@@ -2,6 +2,7 @@ package com.lvable.ningjiaqi.doubanrx.UI;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
@@ -10,6 +11,8 @@ import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Interpolator;
+
+import com.lvable.ningjiaqi.doubanrx.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +32,18 @@ public class PolyLoadingView extends View {
     private List<List<PointF>> mChildren;
 
     private ValueAnimator mProgressAnimator;
-    private ValueAnimator mAlphaAnimator;
     private int mShapeColor = 0xff554433;
     private int mDuration;
     private boolean mEnableAlpha;
     private int mRoundCorner = 3;
+    private int strokeWidth;
+    private ValueAnimator.AnimatorUpdateListener mUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            mProgress = (float) animation.getAnimatedValue();
+            invalidate();
+        }
+    };
 
     public PolyLoadingView(Context context) {
         super(context);
@@ -42,11 +52,19 @@ public class PolyLoadingView extends View {
 
     public PolyLoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
-    }
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.PolyLoadingView,
+                0, 0);
 
-    public PolyLoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        try {
+            slide = a.getInt(R.styleable.PolyLoadingView_slide,6);
+            depth = a.getInt(R.styleable.PolyLoadingView_depth,3);
+            mEnableAlpha = a.getBoolean(R.styleable.PolyLoadingView_enableAlpha,false);
+            mShapeColor = a.getColor(R.styleable.PolyLoadingView_shapeColor,0xff554433);
+        } finally {
+            a.recycle();
+        }
         init();
     }
 
@@ -54,7 +72,8 @@ public class PolyLoadingView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
 
-        mPaint.setStrokeWidth(3);
+        strokeWidth = 3;
+        mPaint.setStrokeWidth(strokeWidth);
         mPaint.setColor(mShapeColor);
         mPaint.setPathEffect(new CornerPathEffect(mRoundCorner));
 
@@ -68,22 +87,8 @@ public class PolyLoadingView extends View {
         mDuration = 1000;
         mProgressAnimator = new ValueAnimator().ofFloat(1,0f).setDuration(mDuration);
         mProgressAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        mProgressAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mProgress = (float) animation.getAnimatedValue();
-                invalidate();
-            }
-        });
-        mAlphaAnimator = new ValueAnimator().ofInt(125,255).setDuration(mDuration);
-        mAlphaAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        mAlphaAnimator.setRepeatMode(ValueAnimator.REVERSE);
-        mAlphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mPaint.setAlpha((int) animation.getAnimatedValue());
-            }
-        });
+        mProgressAnimator.addUpdateListener(mUpdateListener);
+
     }
 
     @Override
@@ -137,25 +142,15 @@ public class PolyLoadingView extends View {
 
         mProgressAnimator.start();
 
-        if (mEnableAlpha) {
-            mAlphaAnimator.start();
-        }
     }
 
     public void stopLoading(){
         mProgressAnimator.end();
-        mAlphaAnimator.end();
     }
 
     public void enableAlphaEffect(boolean enable){
-        if (enable) {
-            // make sure all animaotr start at the same time
-            mProgressAnimator.end();
-            mProgressAnimator.start();
-            mAlphaAnimator.start();
-        } else {
-            mAlphaAnimator.end();
-        }
+        mProgressAnimator.end();
+        mProgressAnimator.start();
     }
 
     public void setReverse(boolean backward) {
@@ -173,7 +168,6 @@ public class PolyLoadingView extends View {
     public void setDuration(int millisecond) {
         mDuration = millisecond;
         mProgressAnimator.setDuration(mDuration);
-        mAlphaAnimator.setDuration(mDuration);
 
     }
 
@@ -236,4 +230,16 @@ public class PolyLoadingView extends View {
         }
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mProgressAnimator.addUpdateListener(mUpdateListener);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        mProgressAnimator.removeAllListeners();
+        mProgressAnimator.end();
+        super.onDetachedFromWindow();
+    }
 }

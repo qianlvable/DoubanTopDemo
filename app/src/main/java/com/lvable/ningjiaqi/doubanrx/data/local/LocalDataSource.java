@@ -34,7 +34,7 @@ public class LocalDataSource implements MovieDataSource {
         mSp = mContext.getSharedPreferences(Constants.SP_NAME,Context.MODE_APPEND);
         mStart = mSp.getInt(Constants.SP_SAVED_COUNT,0);
     }
-    private int mStart = 0;
+    private int mStart = -1;
     public static LocalDataSource getInstance(Context context) {
         if (INSTANCE == null) {
             INSTANCE = new LocalDataSource(context);
@@ -55,7 +55,8 @@ public class LocalDataSource implements MovieDataSource {
                     values.put(MoviePersistenceContract.MovieEntry.COL_MOVIE_RATING,movie.rating);
                     values.put(MoviePersistenceContract.MovieEntry.COL_MOVIE_TITLE,movie.title);
                     values.put(MoviePersistenceContract.MovieEntry.COL_POSTER_URL,movie.imgUrl);
-
+                    values.put(MoviePersistenceContract.MovieEntry.COL_MOVIE_YEAR,movie.year);
+                    values.put(MoviePersistenceContract.MovieEntry.COL_MOVIE_ORIGN_TITLE,movie.orignTitle);
                     db.insert(MoviePersistenceContract.MovieEntry.TABLE_NAME, null, values);
                 }
                 mStart += data.size();
@@ -91,7 +92,7 @@ public class LocalDataSource implements MovieDataSource {
             public void call(Subscriber<? super List<Movie>> subscriber) {
 
                 List<Movie> movies = new ArrayList<>();
-                if (reqStart < mStart) {
+                if (reqStart <= mStart) {
                     SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
                     String[] projection = {
@@ -101,6 +102,9 @@ public class LocalDataSource implements MovieDataSource {
                             MoviePersistenceContract.MovieEntry.COL_POSTER_URL,
                             MoviePersistenceContract.MovieEntry.COL_MOVIE_RATING,
                             MoviePersistenceContract.MovieEntry.COL_MOVIE_DIRECTOR,
+                            MoviePersistenceContract.MovieEntry.COL_MOVIE_YEAR,
+                            MoviePersistenceContract.MovieEntry.COL_MOVIE_ORIGN_TITLE
+
                     };
 
                     String selection = MoviePersistenceContract.MovieEntry._ID + " > ? AND "+
@@ -125,6 +129,8 @@ public class LocalDataSource implements MovieDataSource {
                                     .COL_MOVIE_RATING));
                             movie.directors = c.getString(c.getColumnIndex(MoviePersistenceContract.MovieEntry
                                     .COL_MOVIE_DIRECTOR));
+                            movie.year = c.getInt(c.getColumnIndex(MoviePersistenceContract.MovieEntry.COL_MOVIE_YEAR));
+                            movie.orignTitle = c.getString(c.getColumnIndex(MoviePersistenceContract.MovieEntry.COL_MOVIE_ORIGN_TITLE));
                             movies.add(movie);
                             c.moveToNext();
                         }

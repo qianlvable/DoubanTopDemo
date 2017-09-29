@@ -25,7 +25,10 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                     MoviePersistenceContract.MovieEntry.COL_MOVIE_DIRECTOR + TEXT_TYPE + COMMA_SEP +
                     MoviePersistenceContract.MovieEntry.COL_MOVIE_RATING + " FLOAT" + COMMA_SEP +
                     MoviePersistenceContract.MovieEntry.COL_MOVIE_TITLE + TEXT_TYPE + COMMA_SEP +
-                    MoviePersistenceContract.MovieEntry.COL_POSTER_URL + TEXT_TYPE
+                    MoviePersistenceContract.MovieEntry.COL_POSTER_URL + TEXT_TYPE + COMMA_SEP +
+                    MoviePersistenceContract.MovieEntry.COL_MOVIE_YEAR + INTEGER_TYPE + COMMA_SEP +
+                    MoviePersistenceContract.MovieEntry.COL_MOVIE_ORIGN_TITLE + TEXT_TYPE
+
                     + " );";
 
     public MovieDbHelper(Context context) {

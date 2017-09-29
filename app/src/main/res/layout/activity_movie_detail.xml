@@ -1,40 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<com.lvable.ningjiaqi.doubanrx.UI.ElasticDragDismissFrameLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lvable.ningjiaqi.doubanrx.movieDetail.MovieDetailActivity">
-    <ImageView
-        tools:src="@drawable/cover_test"
-        android:scaleType="centerCrop"
-        android:id="@+id/iv_main_poster"
-        android:layout_width="match_parent"
-        android:layout_height="360dp" />
-    <LinearLayout
-        android:id="@+id/info_panel"
-        android:layout_below="@id/iv_main_poster"
-        android:orientation="vertical"
+    android:id="@+id/dismiss_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:dragDismissScale="0.8"
+    app:dragDismissDistance="400dp"
+    xmlns:tools="http://schemas.android.com/tools">
+    <com.lvable.ningjiaqi.doubanrx.UI.NotifyingScrollView
+        android:scrollbars="none"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/scollview"
+        android:overScrollMode="always"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:background="#5f767d"
-            android:text="This is title"
-            android:textColor="#fafafa"
-            android:paddingLeft="18dp"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp" />
-        <TextView
-            android:textColor="#fafafa"
-            android:textSize="16sp"
-            android:lineSpacingExtra="3dp"
-            android:padding="18dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum libero eget turpis imperdiet lobortis. Proin blandit, libero nec eleifend euismod, quam urna tempor ipsum, in facilisis neque nisl pretium odio. Etiam molestie velit accumsan, vestibulum mi nec, ultricies nibh. Donec dui eros, tristique vitae massa nec, iaculis consectetur libero. Donec commodo aliquet vulputate. Sed ac tincidunt quam. Integer pulvinar ante hendrerit dui fermentum elementum. Suspendisse ultricies diam ac velit pellentesque iaculis. Nam varius facilisis arcu, at cursus erat hendrerit ut. Aliquam lacus justo, dictum nec erat vitae, suscipit egestas urna.
+            android:layout_height="match_parent"
+            tools:context="com.lvable.ningjiaqi.doubanrx.movieDetail.MovieDetailActivity">
+            <com.facebook.drawee.view.SimpleDraweeView
+                tools:src="@drawable/cover_test"
+                android:scaleType="centerCrop"
+                android:id="@+id/iv_main_poster"
+                android:layout_width="match_parent"
+                android:layout_height="360dp" />
 
-"
-            android:background="#2e383f"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-</RelativeLayout>
+            <LinearLayout
+                android:id="@+id/info_panel"
+                android:layout_below="@id/iv_main_poster"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:id="@+id/title_area"
+                    android:orientation="vertical"
+                    android:paddingTop="9dp"
+                    android:paddingLeft="15dp"
+                    android:background="#5f767d"
+                    android:layout_width="match_parent"
+                    android:layout_height="73dp">
+                    <TextView
+                        android:id="@+id/tv_movie_title"
+                        tools:text="盗梦空间"
+                        android:textColor="#fafafa"
+                        android:gravity="center_vertical"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_origin_title"
+                        android:layout_marginTop="3dp"
+                        tools:text="Interception"
+                        android:textStyle="italic"
+                        android:textColor="#fafafa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_summary"
+                    android:textColor="#fafafa"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="3dp"
+                    android:padding="15dp"
+                    android:ellipsize="end"
+                    android:minHeight="230dp"
+                    tools:text="Lorem "
+                    android:background="#2e383f"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_collect"
+                android:src="@drawable/ic_collect"
+                android:visibility="invisible"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="330dp"
+                app:fabSize="normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <LinearLayout
+                android:visibility="invisible"
+                android:id="@+id/loading_area"
+                android:layout_below="@id/iv_main_poster"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical"
+                android:layout_marginTop="90dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.lvable.ningjiaqi.doubanrx.UI.PolyLoadingView
+                    android:id="@+id/poly_loading"
+                    android:layout_gravity="center"
+                    app:shapeColor="#fafafa"
+                    app:slide="6"
+                    app:depth="3"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp" />
+                <TextView
+                    android:layout_marginTop="6dp"
+                    android:layout_gravity="center"
+                    android:paddingLeft="14dp"
+                    android:textColor="#fafafa"
+                    android:text="Loading..."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/actor_area"
+                android:orientation="horizontal"
+                android:background="#5f767d"
+                android:gravity="center_vertical"
+                android:layout_below="@id/info_panel"
+                android:layout_width="match_parent"
+                android:layout_height="62dp">
+                <TextView
+                    android:text="主演: "
+                    android:textColor="#fafafa"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <com.facebook.drawee.view.SimpleDraweeView
+                    app:roundingBorderWidth="1dp"
+                    app:roundingBorderColor="#d7d7d7"
+                    android:id="@+id/iv_actor1"
+                    app:roundAsCircle = "true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    app:roundingBorderWidth="1dp"
+                    app:roundingBorderColor="#d7d7d7"
+                    android:id="@+id/iv_actor2"
+                    app:roundAsCircle = "true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    app:roundingBorderWidth="1dp"
+                    app:roundingBorderColor="#d7d7d7"
+                    android:id="@+id/iv_actor3"
+                    android:layout_marginLeft="10dp"
+                    app:roundAsCircle = "true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+                <com.facebook.drawee.view.SimpleDraweeView
+                    app:roundingBorderWidth="1dp"
+                    app:roundingBorderColor="#d7d7d7"
+                    android:id="@+id/iv_actor4"
+                    android:layout_marginLeft="10dp"
+                    app:roundAsCircle = "true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </com.lvable.ningjiaqi.doubanrx.UI.NotifyingScrollView>
+</com.lvable.ningjiaqi.doubanrx.UI.ElasticDragDismissFrameLayout>

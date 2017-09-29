@@ -15,8 +15,10 @@ public class MoviePersistenceContract {
         public static final String TABLE_NAME = "douban_top250";
         public static final String COL_MOVIE_ID = "movie_id";
         public static final String COL_MOVIE_TITLE = "title";
+        public static final String COL_MOVIE_ORIGN_TITLE = "origin_title";
         public static final String COL_MOVIE_DIRECTOR = "director";
         public static final String COL_MOVIE_RATING = "rating";
         public static final String COL_POSTER_URL = "image_url";
+        public static final String COL_MOVIE_YEAR = "year";
     }
 }

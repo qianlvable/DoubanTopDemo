@@ -41,6 +41,10 @@ public class MovieListPresenter implements MovieListContract.Presenter,MovieData
         mRepository.getMovies(this);
     }
 
+    @Override
+    public int getCurrentRequestPos() {
+        return mRepository.getRequestStartPos();
+    }
 
 
     @Override
@@ -50,6 +54,11 @@ public class MovieListPresenter implements MovieListContract.Presenter,MovieData
 
     @Override
     public void onLoadError() {
-        mMainView.showEmptyError();
+        if (getCurrentRequestPos() != 0){
+            mMainView.loadMoreError();
+        } else {
+            mMainView.showEmptyError();
+        }
     }
+
 }

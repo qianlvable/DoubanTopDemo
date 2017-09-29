@@ -4,7 +4,8 @@ package com.lvable.ningjiaqi.doubanrx.utils;
  * Created by ningjiaqi on 16/4/22.
  */
 public class Constants {
-    public static final String TOP_250_URL = "https://api.douban.com/v2/movie/top25";
+    public static final String TOP_250_URL = "https://api.douban.com/v2/movie/top250";
+    public static final String MOIVE_DETAIL_URL = "https://api.douban.com/v2/movie/subject/";
     public static final String QUERY_PAGE = "start";
     public static final int COUNT_PER_PAGE = 20;
 

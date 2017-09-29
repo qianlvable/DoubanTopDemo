@@ -1,5 +1,6 @@
 package com.lvable.ningjiaqi.doubanrx.utils;
 
+import com.lvable.ningjiaqi.doubanrx.data.Actor;
 import com.lvable.ningjiaqi.doubanrx.data.Movie;
 
 import org.json.JSONArray;
@@ -16,7 +17,7 @@ public class JsonParser {
     public static Movie parseSingleMovie(JSONObject jsonObj) throws JSONException {
         Movie movie = new Movie();
         movie.id = jsonObj.getString("id");
-        movie.year = jsonObj.getString("year");
+        movie.year = jsonObj.getInt("year");
         movie.title = jsonObj.getString("title");
         movie.orignTitle = jsonObj.getString("original_title");
         movie.directors = jsonObj.getJSONArray("directors").getJSONObject(0).getString("name");
@@ -43,8 +44,8 @@ public class JsonParser {
             e.printStackTrace();
         }
         return result;
-
     }
+
 
 
 }

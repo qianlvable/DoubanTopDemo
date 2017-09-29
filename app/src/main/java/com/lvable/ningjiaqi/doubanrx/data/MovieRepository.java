@@ -1,5 +1,7 @@
 package com.lvable.ningjiaqi.doubanrx.data;
 
+import android.util.Log;
+
 import com.lvable.ningjiaqi.doubanrx.data.local.LocalDataSource;
 
 import java.util.List;
@@ -15,8 +17,7 @@ public class MovieRepository {
 
     private final LocalDataSource mLocalDatasource;
     private final MovieDataSource mRemoteDatasource;
-    private List<Movie> mCacheData;
-    private int mStart = 1;
+    private int mStart = 0;
 
     private MovieRepository(LocalDataSource mLocalDatasource, MovieDataSource mRemoteDatasource) {
         this.mLocalDatasource = mLocalDatasource;
@@ -35,45 +36,57 @@ public class MovieRepository {
 
     public void getMovies(MovieDataSource.LoadMoviesCallback callback) {
         if (callback != null){
-            if (false) {
-                callback.onDataLoaded(mCacheData);
-            }else {
-                mLocalDatasource.getMoviesObservable(mStart)
-                        .subscribe(new Subscriber<List<Movie>>() {
-                            @Override
-                            public void onCompleted() {
+            mLocalDatasource.getMoviesObservable(mStart)
+                    .subscribe(new Subscriber<List<Movie>>() {
+                        @Override
+                        public void onCompleted() {
 
-                            }
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                mRemoteDatasource.getMoviesObservable(mStart)
-                                        .subscribe(new Subscriber<List<Movie>>() {
-                                            @Override
-                                            public void onCompleted() {
-                                            }
+                        @Override
+                        public void onError(Throwable e) {
+                            mRemoteDatasource.getMoviesObservable(mStart)
+                                    .subscribe(new Subscriber<List<Movie>>() {
+                                        @Override
+                                        public void onCompleted() {
+                                        }
 
-                                            @Override
-                                            public void onError(Throwable e) {
-                                                callback.onLoadError();
-                                            }
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            callback.onLoadError();
+                                        }
 
-                                            @Override
-                                            public void onNext(List<Movie> movies) {
+                                        @Override
+                                        public void onNext(List<Movie> movies) {
+                                            if (movies.size() == 0) {
+                                                if (mStart < 250) {
+                                                    callback.onLoadError();
+                                                    Log.d("wtf","json parse error");
+                                                }
+                                            } else {
                                                 mStart += movies.size();
                                                 mLocalDatasource.saveData(movies);
                                                 callback.onDataLoaded(movies);
                                             }
-                                        });
-                            }
+                                        }
+                                    });
+                        }
 
-                            @Override
-                            public void onNext(List<Movie> movies) {
-                                mStart += movies.size();
-                                callback.onDataLoaded(movies);
-                            }
-                        });
-            }
+                        @Override
+                        public void onNext(List<Movie> movies) {
+                            mStart += movies.size();
+                            callback.onDataLoaded(movies);
+                        }
+                    });
+
         }
+    }
+
+    public void resetReqStart() {
+        this.mStart = 0;
+    }
+
+    public int getRequestStartPos() {
+        return mStart;
     }
 }

@@ -4,6 +4,7 @@
     android:padding="10dp"
     android:layout_height="65dp">
     <LinearLayout
+        android:id="@+id/loading_footer"
         android:layout_gravity="center"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
@@ -17,8 +18,50 @@
             android:layout_marginTop="2dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="13dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/poly_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/error_footer"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:src="@drawable/ic_error"
+            android:layout_marginLeft="25dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="There is an error"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="13dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_more_footer"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:src="@drawable/ic_no_more"
+            android:layout_marginLeft="25dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="All loaded"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

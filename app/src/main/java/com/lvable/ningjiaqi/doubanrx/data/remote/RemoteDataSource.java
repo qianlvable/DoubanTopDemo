@@ -36,9 +36,9 @@ public class RemoteDataSource implements MovieDataSource {
 
     @Override
     public Observable<List<Movie>> getMoviesObservable(int start) {
-        Observable<List<Movie>> observable = Observable.create(new Observable.OnSubscribe<Response>() {
+        Observable<List<Movie>> observable = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
-            public void call(Subscriber<? super Response> subscriber) {
+            public void call(Subscriber<? super String> subscriber) {
                 OkHttpClient client = new OkHttpClient();
 
                 HttpUrl url = HttpUrl.parse(Constants.TOP_250_URL)
@@ -47,7 +47,8 @@ public class RemoteDataSource implements MovieDataSource {
                 Request request = new Request.Builder().url(url).build();
                 try {
                     Response response = client.newCall(request).execute();
-                    subscriber.onNext(response);
+                    String jsonStr = response.body().string();
+                    subscriber.onNext(jsonStr);
                 } catch (IOException e) {
                     e.printStackTrace();
                     subscriber.onError(e);
@@ -55,20 +56,13 @@ public class RemoteDataSource implements MovieDataSource {
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(new Func1<Response, Observable<List<Movie>>>() {
+        .flatMap(new Func1<String, Observable<List<Movie>>>() {
             @Override
-            public Observable<List<Movie>> call(Response response) {
+            public Observable<List<Movie>> call(String jsonStr) {
                 return Observable.create(new Observable.OnSubscribe<List<Movie>>() {
                     @Override
                     public void call(Subscriber<? super List<Movie>> subscriber) {
-                        String jsonStr = null;
-                        try {
-                            jsonStr = response.body().string();
                             subscriber.onNext(JsonParser.parseMovieList(jsonStr));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            subscriber.onError(e);
-                        }
                     }
                 });
             }
